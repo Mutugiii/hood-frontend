@@ -1,10 +1,10 @@
-$(document).ready(function(){
+$(document).ready(() => {
     getServices()
     getBussinesses()
     getPosts()
 })
 
-function getServices(){
+let getServices = () => {
     fetch('https://hood-drf.herokuapp.com/api/v1/services/')
     .then((res) => res.json())
     .then((data) => {
@@ -27,13 +27,12 @@ function getServices(){
             </div>
             `
         })
-
         document.getElementById('serviceslist').innerHTML = output
     })
     .catch((err) => console.log(err))
 }
 
-function getBussinesses(){
+let getBussinesses = () => {
     fetch('https://hood-drf.herokuapp.com/api/v1/bussinesses/')
     .then((res) => res.json())
     .then((data) => {
@@ -57,7 +56,7 @@ function getBussinesses(){
     .catch((err) => console.log(err))
 }
 
-function getPosts(){
+let getPosts = () => {
     fetch('https://hood-drf.herokuapp.com/api/v1/posts/')
     .then((res) => res.json())
     .then((data) => {

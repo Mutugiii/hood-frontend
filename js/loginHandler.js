@@ -12,6 +12,7 @@ let loginHandler = (e) => {
         const refresh_token = res.data.refresh;
         const access_token = res.data.access;
 
+        localStorage.setItem('username', username)
         localStorage.setItem('access_token', JSON.stringify(access_token));
         localStorage.setItem('refresh_token', JSON.stringify(refresh_token));
         form.reset();
