@@ -6,9 +6,14 @@ let getUserProfile = () => {
     try {
         let username = localStorage.getItem('username');
         let access = JSON.parse(localStorage.getItem('access_token'));
-        fetch('https://hood-drf.herokuapp.com/api/v1/profile/' + username, {
-            method: 'GET',
-            headers: {
+        // fetch('https://hood-drf.herokuapp.com/api/v1/profile/' + username, {
+        //     method: 'GET',
+        //     headers: {
+        //         'Authorization': 'Bearer' + access
+        //     }
+        // })
+        axios.get('https://hood-drf.herokuapp.com/api/v1/profile/' + username, {
+            params: {
                 'Authorization': 'Bearer' + access
             }
         })
@@ -53,6 +58,7 @@ let getUserProfile = () => {
         </div>
             `
         document.getElementById('userprofile').innerHTML = output
+        
         })
         
     } 
@@ -68,7 +74,7 @@ let getUserProfile = () => {
         </div>
         `
         document.getElementById('userprofile').innerHTML = output
-        setTimeout(() => {  window.location.href = '../registrationTemplates/login.html'; }, 5000);
+        setTimeout(() => {  window.location.href = '../profileTemplates/createProfile.html'; }, 5000);
     }
     finally {
     
