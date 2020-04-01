@@ -14,11 +14,10 @@ let getUserProfile = () => {
         // })
         axios.get('https://hood-drf.herokuapp.com/api/v1/profile/' + username, {
             params: {
-                'Authorization': 'Bearer' + access
+                'Authorization': JSON.stringify('Bearer' + access)
             }
         })
         .then((res) => res.json())
-        console.log(res.json())
         .then((profile) => {
             let output = '';
             
@@ -47,37 +46,13 @@ let getUserProfile = () => {
         .catch((err) => 
         {
             console.log(err)
-            let output = '';
-            
-            output += `
-            <div class="row">
-            <div class="container">
-                We could not find your profile! <br/>
-                <button class='btn btn-outline-secondary'><a href="../profileTemplates/createProfile.html">Take me to create a profile</a></button>
-            </div>
-        </div>
-            `
-        document.getElementById('userprofile').innerHTML = output
-        
+            // window.location.href = '../registrationTemplates/login.html';
         })
         
     } 
     catch(err) {
-        let output = '';
-            
-        output += `
-        <div class="row">
-            <div class="container">
-                An error occured login first & create a profile to access this page! <br/>
-                <button class='btn btn-outline-secondary'><a href="../profileTemplates/createProfile.html">Take me to create a profile</a></button>
-            </div>
-        </div>
-        `
-        document.getElementById('userprofile').innerHTML = output
-        setTimeout(() => {  window.location.href = '../profileTemplates/createProfile.html'; }, 5000);
-    }
-    finally {
-    
+        console.log(err)
+        // window.location.href = '../profileTemplates/createProfile.html'; 
     }
 }
 

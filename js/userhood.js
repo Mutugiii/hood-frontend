@@ -4,8 +4,14 @@ $(document).ready(() => {
     getPosts()
 })
 
+let access = JSON.parse(localStorage.getItem('access_token'));
+
 let getServices = () => {
-    fetch('https://hood-drf.herokuapp.com/api/v1/services/')
+    axios.get('https://hood-drf.herokuapp.com/api/v1/services/', {
+        params: {
+            'Authorization': 'Bearer ' + access
+        }
+    })
     .then((res) => res.json())
     .then((data) => {
         let output = '<h5>Emergency Services</h5>';
@@ -29,11 +35,18 @@ let getServices = () => {
         })
         document.getElementById('serviceslist').innerHTML = output
     })
-    .catch((err) => console.log(err))
+    .catch((err) => {
+        console.log(err)
+        // window.location.href = '../registrationTemplates/login.html';
+    })
 }
 
 let getBussinesses = () => {
-    fetch('https://hood-drf.herokuapp.com/api/v1/bussinesses/')
+    axios.get('https://hood-drf.herokuapp.com/api/v1/bussinesses/', {
+        params: {
+            'Authorization': 'Bearer ' + access
+        }
+    })
     .then((res) => res.json())
     .then((data) => {
         let output = '<h5>Bussinesses</h5>';
@@ -53,11 +66,18 @@ let getBussinesses = () => {
 
         document.getElementById('bussinesseslist').innerHTML = output
     })
-    .catch((err) => console.log(err))
+    .catch((err) => {
+        console.log(err)
+        // window.location.href = '../registrationTemplates/login.html';
+    })
 }
 
 let getPosts = () => {
-    fetch('https://hood-drf.herokuapp.com/api/v1/posts/')
+    axios.get('https://hood-drf.herokuapp.com/api/v1/posts/', {
+        params: {
+            'Authorization': 'Bearer ' + access
+        }
+    })
     .then((res) => res.json())
     .then((data) => {
         let output = '<h5>Posts by Users</h5>';
@@ -78,5 +98,8 @@ let getPosts = () => {
 
         document.getElementById('postslist').innerHTML = output
     })
-    .catch((err) => console.log(err))
+    .catch((err) => {
+        console.log(err)
+        // window.location.href = '../registrationTemplates/login.html';
+    })
 }
