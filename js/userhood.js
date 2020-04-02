@@ -1,15 +1,44 @@
 $(document).ready(() => {
+    refreshToken()
     getServices()
     getBussinesses()
     getPosts()
 })
 
+let refreshToken = () => {
+    try {
+        let token_refresh = JSON.parse(localStorage.getItem('refresh_token'));        
+        if(token_refresh === null){
+            window.location.href='../registrationTemplates/login.html';
+        } else {
+            axios.post('https://hood-drf.herokuapp.com/api/v1/token/refresh/',{
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-type': 'application/json'
+                },
+                refresh: token_refresh,
+            })
+            .then((res) => {
+                new_access_token = JSON.stringify(res.data.access);
+                localStorage.setItem('access_token', new_access_token)
+            })
+        }
+    }
+    catch(err) {
+        console.log(err)
+        window.location.href='../registrationTemplates/login.html';
+    }
+}
+
+
 let access = JSON.parse(localStorage.getItem('access_token'));
+tosend = `Bearer ${access}`;
 
 let getServices = () => {
-    axios.get('https://hood-drf.herokuapp.com/api/v1/services/', {
-        params: {
-            'Authorization': 'Bearer ' + access
+    fetch('https://hood-drf.herokuapp.com/api/v1/services/', {
+        method: 'GET',
+        headers: {
+            'Authorization': tosend
         }
     })
     .then((res) => res.json())
@@ -42,9 +71,10 @@ let getServices = () => {
 }
 
 let getBussinesses = () => {
-    axios.get('https://hood-drf.herokuapp.com/api/v1/bussinesses/', {
-        params: {
-            'Authorization': 'Bearer ' + access
+    fetch('https://hood-drf.herokuapp.com/api/v1/bussinesses/', {
+        method: 'GET',
+        headers: {
+            'Authorization': tosend
         }
     })
     .then((res) => res.json())
@@ -73,9 +103,10 @@ let getBussinesses = () => {
 }
 
 let getPosts = () => {
-    axios.get('https://hood-drf.herokuapp.com/api/v1/posts/', {
-        params: {
-            'Authorization': 'Bearer ' + access
+    fetch('https://hood-drf.herokuapp.com/api/v1/posts/', {
+        method: 'GET',
+        headers: {
+            'Authorization': tosend
         }
     })
     .then((res) => res.json())

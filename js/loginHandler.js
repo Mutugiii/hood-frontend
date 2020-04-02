@@ -16,11 +16,11 @@ let loginHandler = (e) => {
         localStorage.setItem('access_token', JSON.stringify(access_token));
         localStorage.setItem('refresh_token', JSON.stringify(refresh_token));
         form.reset();
-        message.style.display = 'Successfully logged in!';
+        message.style.display = 'block'
+        message.innerHTML = 'Successfully logged in!';
         window.location.href = '../index.html';
     })
     .catch((err) => {
-        console.log(err)
         form.reset();
         message.style.display = 'block'
         message.innerHTML = 'Username or password was incorrect! Try Again!';
