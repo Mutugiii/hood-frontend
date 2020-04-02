@@ -34,8 +34,32 @@ let refreshToken = () => {
 let access = JSON.parse(localStorage.getItem('access_token'));
 tosend = `Bearer ${access}`;
 
+let username = localStorage.getItem('username');
+let getUserHood = () => {
+    if(username === null){
+        window.location.href = '../registrationTemplates/login.html';
+    }
+    fetch('https://hood-drf.herokuapp.com/api/v1/profile/' + username, {
+        method: 'GET',
+        headers: {
+            'Authorization': tosend
+        }
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        if(data.hood === null){
+            window.location.href = '../hoodTemplates/hoods.html';
+        }
+        localStorage.setItem('user_profile_hood', data.hood)
+        return data.hood
+    })
+}
+
+
 let getServices = () => {
-    fetch('https://hood-drf.herokuapp.com/api/v1/services/', {
+    hood = getUserHood();
+    user_hood = localStorage.getItem('user_profile_hood');
+    fetch('https://hood-drf.herokuapp.com/api/v1/services/' + user_hood, {
         method: 'GET',
         headers: {
             'Authorization': tosend
@@ -65,13 +89,21 @@ let getServices = () => {
         document.getElementById('serviceslist').innerHTML = output
     })
     .catch((err) => {
-        console.log(err)
+        let output = '<h5>Emergency Services</h5>';
+        output +=  `
+        <div>
+            <p>There are currently no emergency services</p>
+        </div>
+        `
+        document.getElementById('serviceslist').innerHTML = output    
         // window.location.href = '../registrationTemplates/login.html';
     })
 }
 
 let getBussinesses = () => {
-    fetch('https://hood-drf.herokuapp.com/api/v1/bussinesses/', {
+    let hood = getUserHood()
+    user_hood = localStorage.getItem('user_profile_hood');
+    fetch('https://hood-drf.herokuapp.com/api/v1/bussinesses/' + user_hood, {
         method: 'GET',
         headers: {
             'Authorization': tosend
@@ -97,13 +129,21 @@ let getBussinesses = () => {
         document.getElementById('bussinesseslist').innerHTML = output
     })
     .catch((err) => {
-        console.log(err)
+        let output = '<h5>Bussinesses</h5>';
+        output +=  `
+        <div>
+            <p>There are currently no Bussinesses Listed</p>
+        </div>
+        `
+        document.getElementById('bussinesseslist').innerHTML = output
         // window.location.href = '../registrationTemplates/login.html';
     })
 }
 
 let getPosts = () => {
-    fetch('https://hood-drf.herokuapp.com/api/v1/posts/', {
+    let hood = getUserHood()
+    user_hood = localStorage.getItem('user_profile_hood');
+    fetch('https://hood-drf.herokuapp.com/api/v1/posts/' + user_hood, {
         method: 'GET',
         headers: {
             'Authorization': tosend
@@ -114,13 +154,13 @@ let getPosts = () => {
         let output = '<h5>Posts by Users</h5>';
         data.forEach((post) => {
             output += `
-            <div class="card">
+            <div class="card col-md-6">
                 <div class="card-header">${post.post_title}</div>
                 <img class="card-img-top" src="${post.post_image}" alt="Card image cap">
                 <div class="card-body">
                     <p class="card-text">${post.post_content}</p>
                     <div class="card-footer text-muted">
-                    Post by ${post.user.username} on ${post.pub_date}
+                    Post by ${post.user} on ${post.pub_date}
                     </div>
                 </div>
             </div>
@@ -130,7 +170,13 @@ let getPosts = () => {
         document.getElementById('postslist').innerHTML = output
     })
     .catch((err) => {
-        console.log(err)
+        let output = '<h5>User posts</h5>';
+        output +=  `
+        <div>
+            <p>There are currently no posts</p>
+        </div>
+        `
+        document.getElementById('postslist').innerHTML = output
         // window.location.href = '../registrationTemplates/login.html';
     })
 }

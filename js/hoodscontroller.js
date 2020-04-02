@@ -40,12 +40,10 @@ let joinHoods = (hood, user) => {
             }
         })
         .then((res) => {
-            console.log(res)
-            console.log(res.status)
             if(res.status === 500){
                 window.location.href = '../profileTemplates/createProfile.html'
             } else {
-                window.location.href = '../registrationTemplates/login.html';
+                window.location.href = '../hoodTemplates/hood.html';
             }
         })
         .catch((err) => {

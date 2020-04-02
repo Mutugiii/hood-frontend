@@ -1,73 +1,68 @@
-$(document).ready(() => {
-    createPosts()
-})
-
-let createPosts = () => {
-    try{
-        let access = JSON.parse(localStorage.getItem('access_token'));
-        let user_name = localStorage.getItem('username');
-        let hood_name = localStorage.getItem('hood_name');
-
-        let post_title = document.getElementById('username').value;
-        let post_content = document.getElementById('password').value;
-        let post_image = document.getElementById('password').src;
-        let message = document.getElementById('messagesinfo');
-        // fetch(`https://hood-drf.herokuapp.com/api/v1/hoods/${hood_name}`, {
-        //     method: 'GET',
-        //     headers: {
-        //         'Authorization': 'Bearer' + access
-        //     },
-        //     credentials: 'include'
-        // })
-        axios.post(`https://hood-drf.herokuapp.com/api/v1/hoods/${hood_name}`, {
-            params: {
-                'Authorization': `Bearer ${access}`
-            },
-            post_title:post_title,
-            post_content:post_content,
-            post_image:post_image
-            
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            let output = '<h2 class="text-center">Hoods</h2>';
-            data.forEach((hood) => {
-                userhood = hood.hood_name
-                if(hood.admin === null){
-                    hood.admin = 'The Hood currently has no admin'
-                }
-                output += `
-                <hr style="height:1px;border:none;color:rgb(145, 140, 140);background-color:#333;" />
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card" style="width: 18rem;">
-                            <div class="card-body">
-                                <h5 class="card-title">${hood.hood_name}</h5>
-                                <small class="card-subtitle mb-2 text-muted">${hood.location}</small>
-                                </br> </br>
-                                <p class="card-text">
-                                    Number of occupants: ${hood.occupants_count} </br>
-                                    ${hood.admin}
-                                </p>
-                                <a href="join.html" class="card-link">Join Hood</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                `;
-            });
-
-            document.getElementById('hoodslist').innerHTML = output;
-            localStorage.setItem('hood_name', userhood)
-        })
-        .catch((err) => 
-        {
-            // window.location.href = '../registrationTemplates/login.html';
-            console.log(err)
-        })
+let refreshToken = () => {
+    try {
+        let token_refresh = JSON.parse(localStorage.getItem('refresh_token'));        
+        if(token_refresh === null){
+            window.location.href='../registrationTemplates/login.html';
+        } else {
+            axios.post('https://hood-drf.herokuapp.com/api/v1/token/refresh/',{
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-type': 'application/json'
+                },
+                refresh: token_refresh,
+            })
+            .then((res) => {
+                new_access_token = JSON.stringify(res.data.access);
+                localStorage.setItem('access_token', new_access_token)
+            })
+        }
     }
-    catch(err){
-        // window.location.href = '../hoodTemplates/join.html'
-        console.log(err)
+    catch(err) {
+        // console.log(err)
+        // window.location.href='../registrationTemplates/login.html';
     }
 }
+
+
+let createPostsHandler = (e) => {
+    refreshToken()
+    access = JSON.parse(localStorage.getItem('access_token'));
+    tosend = `Bearer ${access}`;
+
+    let title = document.getElementById('posttitle').value;
+    let content = document.getElementById('content').value;
+    let post_image = 'https://images.pexels.com/photos/695644/pexels-photo-695644.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
+    let message = document.getElementById('messagesinfo');
+    let form = document.getElementById('postform');
+
+    user_hood = localStorage.getItem('user_profile_hood');
+    fetch('https://hood-drf.herokuapp.com/api/v1/posts/' + user_hood + '/', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-type': 'application/json',
+                'Authorization': tosend,
+            },
+            body: JSON.stringify({
+                post_title:title,
+                post_content:content,
+                post_image:post_image
+            })
+        })
+    .then((res) => {
+        console.log(res)
+        message.style.display = 'block'
+        message.innerHTML = 'Post Successfully Saved!';
+        form.reset()
+        window.location.href='../hoodTemplates/hood.html';
+    })
+    .catch((err) => {
+        console.log(err)
+        form.reset()
+        message.style.display = 'block'
+        message.innerHTML = 'Please use another Title!';
+    });
+    e.preventDefault();
+}
+
+document.getElementById('postform').addEventListener('submit', createPostsHandler);

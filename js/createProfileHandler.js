@@ -18,8 +18,8 @@ let refreshToken = () => {
         }
     }
     catch(err) {
-        console.log(err)
-        window.location.href='../registrationTemplates/login.html';
+        // console.log(err)
+        // window.location.href='../registrationTemplates/login.html';
     }
 }
 
@@ -28,7 +28,6 @@ let createProfileHandler = (e) => {
     refreshToken()
     access = JSON.parse(localStorage.getItem('access_token'));
     tosend = `Bearer ${access}`;
-    console.log(access)
     let name = localStorage.getItem('username')
     let bio = document.getElementById('bio').value;
     let location = $('#userlocation :selected').val()
@@ -50,14 +49,12 @@ let createProfileHandler = (e) => {
             })
         })
     .then((res) => {
-        console.log(res)
         message.style.display = 'block'
         message.innerHTML = 'Profile Successfully Saved!';
         form.reset()
-        window.location.href='../registrationTemplates/login.html';
+        window.location.href='../profileTemplates/userprofile.html';
     })
     .catch((err) => {
-        console.log(err)
         form.reset()
         message.style.display = 'block'
         message.innerHTML = 'Profile already exists';
