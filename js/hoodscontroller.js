@@ -26,8 +26,7 @@ let refreshToken = () => {
         }
     }
     catch(err) {
-        console.log(err)
-        window.location.href='../registrationTemplates/login.html';
+        // window.location.href='../registrationTemplates/login.html';
     }
 }
 
@@ -47,11 +46,13 @@ let joinHoods = (hood, user) => {
             }
         })
         .catch((err) => {
-            window.location.href = '../registrationTemplates/login.html';
+            refreshToken()
+            // window.location.href = '../registrationTemplates/login.html';
         })
     }
     catch(err){
-        window.location.href = '../registrationTemplates/login.html';
+        refreshToken()
+        // window.location.href = '../registrationTemplates/login.html';
     }
 }
 
@@ -102,10 +103,12 @@ let getHoods = () => {
         })
         .catch((err) => 
         {
-            window.location.href = '../registrationTemplates/login.html';
+            // window.location.href = '../registrationTemplates/login.html';
+            refreshToken()
         })
     }
     catch(err){
-        window.location.href = '../registrationTemplates/login.html';
+        refreshToken()
+        // window.location.href = '../registrationTemplates/login.html';
     }
 }
